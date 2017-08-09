@@ -31,7 +31,7 @@
 		gatewayUrl = "http://dysmsapi.aliyuncs.com/"		
 		accessKeyId = "LTAIbTnPbawglLIQ"
 		accessKeySecret = ""
-		phoneNumbers = "13544285662"
+		phoneNumbers = "13544285**2"
 		signName = "坤Kenmy"
 		templateCode = "SMS_82045083"
 		templateParam = "{\"code\":\"1234\"}"  
