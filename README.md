@@ -52,4 +52,4 @@
 ## 参考http详解链接
 https://help.aliyun.com/document_detail/56189.html?spm=5176.doc55288.6.567.O7dDSP
 
-## 若有疑问，请联系QQ：1027837952
+## 若有疑问，可发送邮件1027837952@qq.com，交流QQ群：158419506
