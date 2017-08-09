@@ -7,7 +7,19 @@
 # 用途
 用户注册、找回密码、用户身份验证、验证码登录等等
 
-# 使用说明
+# 使用样例
+## 参数说明
+ Access Key ID和Access Key Secret是访问阿里云API的密钥,到阿里云帐号上创建
+ phoneNumbers是短信接收手机号码
+ signName是短信签名，需要到阿里云帐号上申请（签名示例："坤Kenmy"）
+ templateCode是短信模板ID，需要到阿里云帐号上申请，通过后会生成ID (模板示例："亲，你的验证码是${code},　不管有没有被打死，都不能告诉别人",模板ID："SMS_82045083")
+ templateParam是传入模板的参数(参数示例："{\"code\":\"1234\"}" )
+
+## 手机收到短信如下所示
+	[坤Kenmy]你的验证码是1234,　不管有没有被打死，都不能告诉别人
+  
+
+## 程序
 将其中的accessKeyId、accessKeySecret、phoneNumbers、signName、templateCode、templateParam替换成你的就可以直接使用了
 	package main 
 
@@ -17,24 +29,24 @@
 	)
 	var (
 		gatewayUrl = "http://dysmsapi.aliyuncs.com/"		
-		accessKeyId = "*******"
-		accessKeySecret = "*************"
-		phoneNumbers = "1354*********"
-		signName = "KenmyZhang"
+		accessKeyId = "LTAIbTnPbawglLIQ"
+		accessKeySecret = ""
+		phoneNumbers = "13544285662"
+		signName = "坤Kenmy"
 		templateCode = "SMS_82045083"
-		templateParam = "{\"code\":\"1234\"}"
+		templateParam = "{\"code\":\"1234\"}"  
 	)
 
 	 func main() {
-	 	smsClient := app.NewSmsClient(gatewayUrl)
-	 	if result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam); err != nil {
-	 		fmt.Println("error:%v", err.Error())
-	 	} else {
-	 		for key, value := range result {
-	 			 fmt.Println("key:%v", key, " value:",value)
-	 		}
-	 	}
-		
+		smsClient := app.NewSmsClient(gatewayUrl)
+		if result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam); err != nil {
+			fmt.Println("error:", err.Error())
+		} else {
+			for key, value := range result {
+				 fmt.Println("key:", key, " value:",value)
+			}
+		}
+
 	}
 ## 参考http详解链接
 https://help.aliyun.com/document_detail/56189.html?spm=5176.doc55288.6.567.O7dDSP
