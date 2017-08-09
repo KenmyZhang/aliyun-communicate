@@ -9,11 +9,11 @@
 
 # 使用样例
 ## 参数说明
- Access Key ID和Access Key Secret是访问阿里云API的密钥,到阿里云帐号上创建
- phoneNumbers是短信接收手机号码
- signName是短信签名，需要到阿里云帐号上申请（签名示例："我的签名"）
- templateCode是短信模板ID，需要到阿里云帐号上申请，通过后会生成ID (模板示例："亲，你的验证码是${code},　不管有没有被打死，都不能告诉别人",模板ID："SMS_82045083")
- templateParam是传入模板的参数(参数示例："{\"code\":\"1234\"}" )
+ 	Access Key ID和Access Key Secret是访问阿里云API的密钥,到阿里云帐号上创建
+ 	phoneNumbers是短信接收手机号码
+ 	signName是短信签名，需要到阿里云帐号上申请（签名示例："我的签名"）
+ 	templateCode是短信模板ID，需要到阿里云帐号上申请，通过后会生成ID (模板示例："亲，你的验证码是${code},　不管有没有被打死，都不能告诉别人",模板ID："SMS_82045083")
+ 	templateParam是传入模板的参数(参数示例："{\"code\":\"1234\"}" )
 
 ## 手机收到短信如下所示
 	[我的签名]你的验证码是1234,　不管有没有被打死，都不能告诉别人
@@ -21,6 +21,7 @@
 
 ## 程序
 将其中的accessKeyId、accessKeySecret、phoneNumbers、signName、templateCode、templateParam替换成你的就可以直接使用了
+
 	package main 
 
 	import (
