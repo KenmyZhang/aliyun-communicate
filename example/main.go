@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/KenmyZhang/aliyun-communicate/app"
+	"github.com/KenmyZhang/aliyun-communicate"
 )
 
 var (
@@ -17,7 +17,7 @@ var (
 )
 
 func main() {
-	smsClient := app.NewSmsClient(gatewayUrl)
+	smsClient := aliyunsmsclient.New(gatewayUrl)
 	if result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam); err != nil {
 		fmt.Println("error:", err.Error())
 	} else {

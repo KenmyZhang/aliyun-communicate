@@ -1,22 +1,24 @@
-package app
+// @see `./sms-lib/sms-lib.go`.
+// The client of the sms service of Aliyun(阿理云短信服务客户端) which can be named as aliyunsmsclient or simply smsclient, or smsserviceclient.
+package aliyunsmsclient
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
-	"github.com/KenmyZhang/aliyun-communicate/model"
+	"github.com/KenmyZhang/aliyun-communicate/sms-lib"
 )
 
 type SmsClient struct {
-	Request    *model.ALiYunCommunicationRequest
+	Request    *aliyunsmslib.ALiYunCommunicationRequest
 	GatewayUrl string
 	Client     *http.Client
 }
 
-func NewSmsClient(gatewayUrl string) *SmsClient {
+func New(gatewayUrl string) *SmsClient {
 	smsClient := new(SmsClient)
-	smsClient.Request = &model.ALiYunCommunicationRequest{}
+	smsClient.Request = &aliyunsmslib.ALiYunCommunicationRequest{}
 	smsClient.GatewayUrl = gatewayUrl
 	smsClient.Client = &http.Client{}
 	return smsClient

@@ -10,8 +10,6 @@
 # 使用样例
 ## 参数说明
  	Access Key ID和Access Key Secret: 访问阿里云API的密钥,到阿里云帐号上创建
- 	phoneNumbers :短信接收手机号码
- 	signName:短信签名，需要到阿里云帐号上申请（签名示例："我的签名"）
  	templateCode :短信模板ID，需要到阿里云帐号上申请，通过后会生成ID (模板示例："亲，你的验证码是${code},　不管有没有被打死，都不能告诉别人",模板ID："SMS_82045083")
  	templateParam :传入模板的参数(参数示例："{\"code\":\"1234\"}" )
 
@@ -22,33 +20,38 @@
 ## 程序
 将其中的accessKeyId、accessKeySecret、phoneNumbers、signName、templateCode、templateParam替换成你的就可以直接使用了
 
-	package main 
+```go
+package main
 
-	import (
-		"fmt"
-		"github.com/KenmyZhang/aliyun-communicate/app"
-	)
-	var (
-		gatewayUrl = "http://dysmsapi.aliyuncs.com/"		
-		accessKeyId = "LTAIbTnPbawglLIQ"
-		accessKeySecret = ""
-		phoneNumbers = "13544285**2"
-		signName = "坤Kenmy"
-		templateCode = "SMS_82045083"
-		templateParam = "{\"code\":\"1234\"}"  
-	)
+import (
+	"fmt"
 
-	 func main() {
-		smsClient := app.NewSmsClient(gatewayUrl)
-		if result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam); err != nil {
-			fmt.Println("error:", err.Error())
-		} else {
-			for key, value := range result {
-				 fmt.Println("key:", key, " value:",value)
-			}
+	"github.com/KenmyZhang/aliyun-communicate"
+)
+
+var (
+	gatewayUrl      = "http://dysmsapi.aliyuncs.com/"
+	accessKeyId     = "LTAIbTnPbawglLIQ"
+	accessKeySecret = ""
+	phoneNumbers    = "13544285**2"
+	signName        = "坤Kenmy"
+	templateCode    = "SMS_82045083"
+	templateParam   = "{\"code\":\"1234\"}"
+)
+
+func main() {
+	smsClient := aliyunsmsclient.New(gatewayUrl)
+	if result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam); err != nil {
+		fmt.Println("error:", err.Error())
+	} else {
+		for key, value := range result {
+			fmt.Println("key:", key, " value:", value)
 		}
-
 	}
+
+}
+```
+
 ## 参考http详解链接
 https://help.aliyun.com/document_detail/56189.html?spm=5176.doc55288.6.567.O7dDSP
 
