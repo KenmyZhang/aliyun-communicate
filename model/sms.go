@@ -2,39 +2,40 @@ package model
 
 import (
 	"bytes"
-	"fmt"
-	"time"
-	"errors"
-	"strings"	
-	"sort"
-	"net/url"
+	"crypto/hmac"
+	"crypto/sha1"
 	"encoding/base32"
 	"encoding/base64"
-    "crypto/hmac"
-	"crypto/sha1" 
-	"github.com/pborman/uuid"  
+	"errors"
+	"fmt"
+	"net/url"
+	"sort"
+	"strings"
+	"time"
+
+	"github.com/pborman/uuid"
 )
 
 type ALiYunCommunicationRequest struct {
 	//system parameters
-	AccessKeyId        string
-	Timestamp          string
-	Format             string
-	SignatureMethod    string
-	SignatureVersion   string
-	SignatureNonce     string
-	Signature          string
-	
+	AccessKeyId      string
+	Timestamp        string
+	Format           string
+	SignatureMethod  string
+	SignatureVersion string
+	SignatureNonce   string
+	Signature        string
+
 	//business parameters
-	Action             string
-	Version            string
-	RegionId           string
-	PhoneNumbers  	   string
-	SignName           string
-	TemplateCode       string
-	TemplateParam      string
-	SmsUpExtendCode    string
-	OutId              string
+	Action          string
+	Version         string
+	RegionId        string
+	PhoneNumbers    string
+	SignName        string
+	TemplateCode    string
+	TemplateParam   string
+	SmsUpExtendCode string
+	OutId           string
 }
 
 var encoding = base32.NewEncoding("ybndrfg8ejkmcpqxot1uwisza345h897")
@@ -50,18 +51,18 @@ func NewId() string {
 
 func (req *ALiYunCommunicationRequest) SetParamsValue(accessKeyId, phoneNumbers, signName, templateCode, templateParam string) error {
 	req.AccessKeyId = accessKeyId
-    now := time.Now()
-    local, err := time.LoadLocation("GMT")
-    if err != nil {
-        return err
-    }
+	now := time.Now()
+	local, err := time.LoadLocation("GMT")
+	if err != nil {
+		return err
+	}
 	req.Timestamp = now.In(local).Format("2006-01-02T15:04:05Z")
-	fmt.Println("time:",req.Timestamp)
+	fmt.Println("time:", req.Timestamp)
 	req.Format = "json"
 	req.SignatureMethod = "HMAC-SHA1"
 	req.SignatureVersion = "1.0"
 	req.SignatureNonce = NewId()
-	fmt.Println("req.SignatureNonce:",req.SignatureNonce)
+	fmt.Println("req.SignatureNonce:", req.SignatureNonce)
 
 	req.Action = "SendSms"
 	req.Version = "2017-05-25"
@@ -71,7 +72,7 @@ func (req *ALiYunCommunicationRequest) SetParamsValue(accessKeyId, phoneNumbers,
 	req.TemplateCode = templateCode
 	req.TemplateParam = templateParam
 	req.SmsUpExtendCode = "90999"
-	req.OutId = "abcdefg"    
+	req.OutId = "abcdefg"
 	return nil
 }
 
@@ -83,7 +84,7 @@ func (req *ALiYunCommunicationRequest) SmsParamsIsValid() error {
 	if len(req.PhoneNumbers) == 0 {
 		return errors.New("PhoneNumbers required")
 	}
-	
+
 	if len(req.SignName) == 0 {
 		return errors.New("SignName required")
 	}
@@ -108,7 +109,7 @@ func (req *ALiYunCommunicationRequest) BuildSmsRequestEndpoint(accessKeySecret, 
 	systemParams := make(map[string]string)
 	systemParams["SignatureMethod"] = req.SignatureMethod
 	systemParams["SignatureNonce"] = req.SignatureNonce
-	systemParams["AccessKeyId"]  = req.AccessKeyId
+	systemParams["AccessKeyId"] = req.AccessKeyId
 	systemParams["SignatureVersion"] = req.SignatureVersion
 	systemParams["Timestamp"] = req.Timestamp
 	systemParams["Format"] = req.Format
@@ -126,9 +127,9 @@ func (req *ALiYunCommunicationRequest) BuildSmsRequestEndpoint(accessKeySecret, 
 	businessParams["OutId"] = req.OutId
 	// generate signature and sorted  query
 	sortQueryString, signature := generateQueryStringAndSignature(businessParams, systemParams, accessKeySecret)
-	fmt.Println("Signature:",signature)
-	fmt.Println("sortQueryString:",sortQueryString)
-	return gatewayUrl + "?Signature=" + signature + sortQueryString, nil 
+	fmt.Println("Signature:", signature)
+	fmt.Println("sortQueryString:", sortQueryString)
+	return gatewayUrl + "?Signature=" + signature + sortQueryString, nil
 }
 
 func generateQueryStringAndSignature(businessParams map[string]string, systemParams map[string]string, accessKeySecret string) (string, string) {
@@ -141,22 +142,22 @@ func generateQueryStringAndSignature(businessParams map[string]string, systemPar
 
 	for key, value := range systemParams {
 		keys = append(keys, key)
-		allParams[key] = value 
+		allParams[key] = value
 	}
 
 	sort.Strings(keys)
 
 	sortQueryStringTmp := ""
 	for _, key := range keys {
-		rstkey := specialUrlEncode(key)			
-    	rstval := specialUrlEncode(allParams[key])
-		sortQueryStringTmp = sortQueryStringTmp + "&" + rstkey + "=" + rstval 
+		rstkey := specialUrlEncode(key)
+		rstval := specialUrlEncode(allParams[key])
+		sortQueryStringTmp = sortQueryStringTmp + "&" + rstkey + "=" + rstval
 	}
 
 	sortQueryString := strings.Replace(sortQueryStringTmp, "&", "", 1)
 	stringToSign := "GET" + "&" + specialUrlEncode("/") + "&" + specialUrlEncode(sortQueryString)
 
-	sign := sign(accessKeySecret + "&", stringToSign)
+	sign := sign(accessKeySecret+"&", stringToSign)
 	signature := specialUrlEncode(sign)
 	return sortQueryStringTmp, signature
 }

@@ -1,16 +1,17 @@
 package app
 
 import (
-	"github.com/KenmyZhang/aliyun-communicate/model"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/KenmyZhang/aliyun-communicate/model"
 )
 
 type SmsClient struct {
-	Request   *model.ALiYunCommunicationRequest
+	Request    *model.ALiYunCommunicationRequest
 	GatewayUrl string
-	Client    *http.Client
+	Client     *http.Client
 }
 
 func NewSmsClient(gatewayUrl string) *SmsClient {
@@ -24,25 +25,24 @@ func NewSmsClient(gatewayUrl string) *SmsClient {
 func (smsClient *SmsClient) Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam string) (result map[string]interface{}, err error) {
 	var endpoint string
 	if err = smsClient.Request.SetParamsValue(accessKeyId, phoneNumbers, signName, templateCode, templateParam); err != nil {
-		return 
+		return
 	}
 	if endpoint, err = smsClient.Request.BuildSmsRequestEndpoint(accessKeySecret, smsClient.GatewayUrl); err != nil {
-		return 
+		return
 	}
 
-	request, _ := http.NewRequest("GET",endpoint, nil)
+	request, _ := http.NewRequest("GET", endpoint, nil)
 	response, err := smsClient.Client.Do(request)
 	if err != nil {
-		return 
-	}		
+		return
+	}
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return 
-	}	
-	defer response.Body.Close()	
+		return
+	}
+	defer response.Body.Close()
 
 	err = json.Unmarshal(body, &result)
 
-	return 
+	return
 }
-
