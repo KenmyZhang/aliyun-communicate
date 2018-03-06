@@ -5,18 +5,18 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/KenmyZhang/aliyun-communicate/model"
+	"github.com/KenmyZhang/aliyun-communicate/sms-lib"
 )
 
 type SmsClient struct {
-	Request    *model.ALiYunCommunicationRequest
+	Request    *aliyunsmslib.ALiYunCommunicationRequest
 	GatewayUrl string
 	Client     *http.Client
 }
 
 func NewSmsClient(gatewayUrl string) *SmsClient {
 	smsClient := new(SmsClient)
-	smsClient.Request = &model.ALiYunCommunicationRequest{}
+	smsClient.Request = &aliyunsmslib.ALiYunCommunicationRequest{}
 	smsClient.GatewayUrl = gatewayUrl
 	smsClient.Client = &http.Client{}
 	return smsClient

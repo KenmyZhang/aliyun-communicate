@@ -1,4 +1,8 @@
-package model
+// @see https://blog.golang.org/package-names
+// @see https://github.com/google/google-api-go-client
+// The library of the sms service of Aliyun(阿理云短信服务库) which can be named as aliyunsmslib or simply smslib, or smsservicelib.
+// Here it is named as aliyunsmslib to make it more unique in the scope of $GOPATH.
+package aliyunsmslib
 
 import (
 	"bytes"
