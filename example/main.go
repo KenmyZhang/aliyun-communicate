@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/KenmyZhang/aliyun-communicate"
@@ -18,12 +19,19 @@ var (
 
 func main() {
 	smsClient := aliyunsmsclient.New(gatewayUrl)
-	if result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam); err != nil {
-		fmt.Println("error:", err.Error())
-	} else {
-		for key, value := range result {
-			fmt.Println("key:", key, " value:", value)
-		}
+	result, err := smsClient.Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam)
+	fmt.Println("Got raw response from server:", string(result.RawResponse))
+	if err != nil {
+		panic("Failed to send Message: " + err.Error())
 	}
 
+	resultJson, err := json.Marshal(result)
+	if err != nil {
+		panic(err)
+	}
+	if result.IsSuccessful() {
+		fmt.Println("A SMS is sent successfully:", resultJson)
+	} else {
+		fmt.Println("Failed to send a SMS:", resultJson)
+	}
 }
