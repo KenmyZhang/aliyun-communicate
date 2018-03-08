@@ -24,27 +24,30 @@ func New(gatewayUrl string) *SmsClient {
 	return smsClient
 }
 
-func (smsClient *SmsClient) Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam string) (result map[string]interface{}, err error) {
-	var endpoint string
-	if err = smsClient.Request.SetParamsValue(accessKeyId, phoneNumbers, signName, templateCode, templateParam); err != nil {
-		return
+func (smsClient *SmsClient) Execute(accessKeyId, accessKeySecret, phoneNumbers, signName, templateCode, templateParam string) (*Response, error) {
+	err := smsClient.Request.SetParamsValue(accessKeyId, phoneNumbers, signName, templateCode, templateParam)
+	if err != nil {
+		return nil, err
 	}
-	if endpoint, err = smsClient.Request.BuildSmsRequestEndpoint(accessKeySecret, smsClient.GatewayUrl); err != nil {
-		return
+	endpoint, err := smsClient.Request.BuildSmsRequestEndpoint(accessKeySecret, smsClient.GatewayUrl)
+	if err != nil {
+		return nil, err
 	}
 
 	request, _ := http.NewRequest("GET", endpoint, nil)
 	response, err := smsClient.Client.Do(request)
 	if err != nil {
-		return
+		return nil, err
 	}
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return
+		return nil, err
 	}
 	defer response.Body.Close()
 
-	err = json.Unmarshal(body, &result)
+	result := new(Response)
+	err = json.Unmarshal(body, result)
 
-	return
+	result.RawResponse = body
+	return result, err
 }
